@@ -25,6 +25,10 @@ health_mobile：移动端前台。
 PowerDesigner：数据库模型构建；
 TIBCO Jaspersoft Studio：模板文件工具。
 
+**4. 补充说明**
+
+sql文件夹中的sql文件即为本项目所需的基础数据库表文件。
+
 ## 二、快速启动
 
 **1. 默认账户**
