@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.OrderDao">
+
+    <!--① 由于属性与列名不一致，此处手动映射关系，用于findByCondition方法 ⬇ -->
+    <resultMap id="baseResultMap" type="com.itheima.pojo.Order">
+        <id column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="orderDate" property="orderDate"/>
+        <result column="orderType" property="orderType"/>
+        <result column="orderStatus" property="orderStatus"/>
+        <result column="setmeal_id" property="setmealId"/>
+    </resultMap>
+
+    <!--② 跟据订单信息查询预约，使用baseResultMap作为结果集 ⬆ -->
+    <select id="findByCondition" parameterType="com.itheima.pojo.Order" resultMap="baseResultMap">
+        select * from t_order
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="memberId != null">
+                and member_id = #{memberId}
+            </if>
+            <if test="orderDate != null">
+                and orderDate = #{orderDate}
+            </if>
+            <if test="orderType != null">
+                and orderType = #{orderType}
+            </if>
+            <if test="orderStatus != null">
+                and orderStatus = #{orderStatus}
+            </if>
+            <if test="setmealId != null">
+                and setmeal_id = #{setmealId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增预约信息-->
+    <insert id="add">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into
+        t_order
+        (member_id,orderDate,orderType,orderStatus,setmeal_id)
+        values
+        (#{memberId},#{orderDate},#{orderType},#{orderStatus},#{setmealId})
+    </insert>
+
+    <!--跟据预约ID查询预约信息-->
+    <select id="findById4Detail" resultType="java.util.Map">
+        select m.name as member, s.name as setmeal, o.orderDate as orderDate, o.orderType as orderType
+        from t_order o,
+             t_member m,
+             t_setmeal s
+        where o.member_id = m.id
+          and o.setmeal_id = s.id
+          and o.id = #{id}
+    </select>
+
+    <!--获取指定日期的预约数-->
+    <select id="findOrderCountByDate" resultType="java.lang.Integer">
+        select count(*)
+        from t_order
+        where orderDate = #{orderDate}
+    </select>
+
+    <!--查询指定日期之后的预约数-->
+    <select id="findOrderCountAfterDate" resultType="java.lang.Integer">
+        select count(id)
+        from t_order
+        where orderDate &gt;= #{value}
+    </select>
+
+    <!--查询指定日期已到诊-->
+    <select id="findVisitsCountByDate" resultType="java.lang.Integer">
+        select count(id)
+        from t_order
+        where orderDate = #{value}
+          and orderStatus = '已到诊'
+    </select>
+
+    <!--查询指定日期后已到诊-->
+    <select id="findVisitsCountAfterDate" resultType="java.lang.Integer">
+        select count(id)
+        from t_order
+        where orderDate &gt;= #{value}
+          and orderStatus = '已到诊'
+    </select>
+
+    <!--查询热门套餐-->
+    <select id="findHotSetmeal" resultType="java.util.Map">
+        select s.name,
+               count(o.id)                                   setmeal_count,
+               count(o.id) / (select count(id) from t_order) proportion
+        from t_order o
+                 inner join t_setmeal s on s.id = o.setmeal_id
+        group by o.setmeal_id
+        order by setmeal_count desc
+        limit 0,4
+    </select>
+
+
+</mapper>

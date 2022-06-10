@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.CheckItemDao">
+    <!--插入检查项数据-->
+    <insert id="add" parameterType="com.itheima.pojo.CheckItem">
+        INSERT INTO t_checkitem(code, name, sex, age, price, type, attention, remark)
+        VALUES (#{code}, #{name}, #{sex}, #{age}, #{price}, #{type}, #{attention}, #{remark})
+    </insert>
+
+    <!--查询检查项-->
+    <select id="selectByCondition" parameterType="string" resultType="com.itheima.pojo.CheckItem">
+        SELECT * FROM t_checkitem
+        <if test="value != null and value.length > 0">
+            WHERE code = #{value} OR name = #{value}
+        </if>
+    </select>
+
+    <!--跟据检查项ID查询关联情况-->
+    <select id="findCountByCheckItemId" parameterType="int" resultType="java.lang.Long">
+        SELECT count(*) FROM t_checkgroup_checkitem WHERE checkitem_id = #{id}
+    </select>
+
+    <!--跟据检查项ID删除-->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM t_checkitem WHERE id = #{id}
+    </delete>
+
+    <!--跟据检查项ID查询-->
+    <select id="findById" resultType="com.itheima.pojo.CheckItem">
+        SELECT * FROM t_checkitem WHERE id = #{id}
+    </select>
+
+    <!--编辑检查项的方法-->
+    <update id="edit" parameterType="com.itheima.pojo.CheckItem">
+        UPDATE t_checkitem
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="attention != null">
+                attention = #{attention},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--查询所有检查项的方法-->
+    <select id="findAll" resultType="com.itheima.pojo.CheckItem">
+        SELECT * FROM t_checkitem
+    </select>
+
+    <!--通过检查组ID查询检查项信息-->
+    <select id="findCheckItemById" resultType="com.itheima.pojo.CheckItem">
+        select * from t_checkitem where id in
+        (select checkitem_id from t_checkgroup_checkitem where checkgroup_id = #{id})
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.OrderSettingDao">
+
+    <!--查询预约设置情况-->
+    <select id="findCountByOrderDate" resultType="java.lang.Long">
+        select count(*)
+        from t_ordersetting
+        where orderDate = #{orderDate}
+    </select>
+
+    <!--更新预约设置-->
+    <update id="editNumberByOrderDate">
+        update t_ordersetting
+        set number = #{number}
+        where orderDate = #{orderDate}
+    </update>
+
+    <!--插入预约信息-->
+    <insert id="add">
+        insert into t_ordersetting(orderDate, number)
+        values (#{orderDate}, #{number})
+    </insert>
+
+    <!--跟据日期范围查询预约信息-->
+    <select id="getOrderSettingByMonth" resultType="com.itheima.pojo.OrderSetting">
+        select *
+        from t_ordersetting
+        where orderDate between #{dateBegin} and #{dateEnd}
+    </select>
+
+    <!--跟据某一具体日期查询预约信息-->
+    <select id="findByOrderDate" resultType="com.itheima.pojo.OrderSetting">
+        select *
+        from t_ordersetting
+        where orderDate = #{orderDate}
+    </select>
+
+    <!--跟新已预约人数信息-->
+    <update id="editReservationsByOrderDate">
+        update t_ordersetting
+        set reservations = #{reservations}
+        where orderDate = #{orderDate}
+    </update>
+
+
+</mapper>

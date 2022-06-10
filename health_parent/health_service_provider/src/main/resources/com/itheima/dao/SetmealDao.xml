@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.SetmealDao">
+
+    <!--新增套餐-->
+    <insert id="add" parameterType="com.itheima.pojo.Setmeal">
+        insert into t_setmeal(name, code, helpCode, sex, age, price, remark, attention, img)
+        VALUES (#{name}, #{code}, #{helpCode}, #{sex}, #{age}, #{price}, #{remark}, #{attention}, #{img})
+    </insert>
+
+    <!--绑定关联关系-->
+    <insert id="setSetmealAndCheckGroup" parameterType="map">
+        insert into t_setmeal_checkgroup(setmeal_id, checkgroup_id)
+        VALUES (#{setmeal_id}, #{checkgroup_id})
+    </insert>
+
+    <!--跟据条件查询套餐-->
+    <select id="selectByCondition" resultType="com.itheima.pojo.Setmeal">
+        SELECT * FROM t_setmeal
+        <if test="value != null and value.length > 0">
+            WHERE code = #{value} OR name = #{value} OR helpCode = #{value}
+        </if>
+    </select>
+
+    <!--① 基本属性映射，此处关联resultMap为findByIdResultMap ⬇ -->
+    <resultMap id="baseResultMap" type="com.itheima.pojo.Setmeal">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="helpCode" property="helpCode"/>
+        <result column="sex" property="sex"/>
+        <result column="age" property="age"/>
+        <result column="price" property="price"/>
+        <result column="remark" property="remark"/>
+        <result column="attention" property="attention"/>
+        <result column="img" property="img"/>
+    </resultMap>
+
+    <!--② 多对多映射，此处关联findById方法 ⬇ -->
+    <resultMap id="findByIdResultMap" type="com.itheima.pojo.Setmeal" extends="baseResultMap">
+        <collection property="checkGroups"
+                    javaType="ArrayList"
+                    ofType="com.itheima.pojo.CheckGroup"
+                    column="id"
+                    select="com.itheima.dao.CheckGroupDao.findCheckGroupById">
+        </collection>
+    </resultMap>
+
+    <!--③ 跟据ID查询套餐，需关联resultMap为findByIdResultMap ⬆ -->
+    <select id="findSetmealById" resultMap="findByIdResultMap">
+        select *
+        from t_setmeal
+        where id = #{id}
+    </select>
+
+    <!--通过ID查询套餐信息-->
+    <select id="findById" resultType="com.itheima.pojo.Setmeal">
+        select *
+        from t_setmeal
+        where id = #{id}
+    </select>
+
+    <!--跟据套餐ID查询关联的检查组IDS-->
+    <select id="findCheckItemIdsByCheckGroupId" resultType="java.lang.Integer">
+        select checkgroup_id
+        from t_setmeal_checkgroup
+        where setmeal_id = #{id}
+    </select>
+
+    <!--更新检查套餐信息-->
+    <update id="edit" parameterType="com.itheima.pojo.Setmeal">
+        UPDATE t_checkgroup
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="helpCode != null">
+                helpCode = #{helpCode},
+            </if>
+            <if test="attention != null">
+                attention = #{attention},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="age != null">
+                age = #{age}
+            </if>
+            <if test="price != null">
+                price = #{price}
+            </if>
+            <if test="img != null">
+                img = #{img}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--跟据套餐ID删除检查组IDS-->
+    <delete id="deleteCheckGroupIdsBySetmealId">
+        delete
+        from t_setmeal_checkgroup
+        where setmeal_id = #{id}
+    </delete>
+
+    <!--跟据套餐ID删除套餐-->
+    <delete id="deleteById">
+        delete
+        from t_setmeal
+        where id = #{id}
+    </delete>
+
+    <!--查询所有套餐-->
+    <select id="findAll" resultType="com.itheima.pojo.Setmeal">
+        select *
+        from t_setmeal
+    </select>
+
+    <!--查询套餐统计信息-->
+    <select id="findSetmealCount" resultType="java.util.Map">
+        select s.name, count(o.id) as value
+        from t_order o,
+             t_setmeal s
+        where o.setmeal_id = s.id
+        group by s.name
+    </select>
+
+</mapper>
