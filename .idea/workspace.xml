@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="864fb7f7-2500-413d-b3ee-a1a35e82f443" name="Changes" comment="commit by stone" />
+    <list default="true" id="864fb7f7-2500-413d-b3ee-a1a35e82f443" name="Changes" comment="commit by stone">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -214,7 +217,8 @@
       <workItem from="1654780677717" duration="35000" />
       <workItem from="1654780828415" duration="3475000" />
       <workItem from="1654784641519" duration="216000" />
-      <workItem from="1654824552878" duration="1320000" />
+      <workItem from="1654824552878" duration="1690000" />
+      <workItem from="1654826262023" duration="1035000" />
     </task>
     <task id="LOCAL-00001" summary="commit by stone">
       <created>1654824996040</created>
@@ -239,6 +243,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="commit by stone" />
