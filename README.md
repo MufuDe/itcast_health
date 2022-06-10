@@ -84,7 +84,7 @@ JasperReports文档模板框架[JasperReports](https://community.jaspersoft.com/
 
 可能是项目中外联的图片链接失效了，具体见 <u>health_backend/src/main/webapp/template/health_business3.jrxml</u>.
 
-```
+```xml
 <title>
     <band height="79" splitType="Stretch">
         <image>
